@@ -1,6 +1,6 @@
 # pi-jj
 
-![pi-jj banner](./assets/pi-jj-banner.svg)
+![pi-jj banner](./assets/pi-jj-banner.png)
 
 Pi extension package for **Jujutsu-first** workflows.
 
@@ -213,4 +213,3 @@ Add optional settings under `piJj` in `~/.pi/agent/settings.json`:
 - `promptForPublishMode` (default `true`): for `/jj-pr-publish` without `--dry-run`, show a mode picker (`Dry-run first`, `Publish now`, `Cancel`).
 - `autoSyncOnPublish` (default `true`): refresh PR state from GitHub before publish/dry-run and after real publish.
 - `restoreMode` (default `"file"`): checkpoint restore strategy. `"file"` uses `jj restore --from` (file contents only). `"operation"` uses `jj op restore` (full repo state, with auto `jj git fetch` to resync).
-
