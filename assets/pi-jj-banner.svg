@@ -1,73 +1,79 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
   <title id="title">pi-jj banner</title>
-  <desc id="desc">Banner showing a Pi coding agent core, checkpoint nodes, and stacked pull request cards.</desc>
+  <desc id="desc">Conceptual banner with an agent core, checkpoint flow, and stacked PR layers.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#071425" />
-      <stop offset="48%" stop-color="#0f2642" />
-      <stop offset="100%" stop-color="#183053" />
+      <stop offset="0%" stop-color="#08192d" />
+      <stop offset="52%" stop-color="#102b4a" />
+      <stop offset="100%" stop-color="#1b3e5f" />
     </linearGradient>
-    <radialGradient id="glow" cx="30%" cy="12%" r="80%">
-      <stop offset="0%" stop-color="#7be8ff" stop-opacity="0.34" />
-      <stop offset="100%" stop-color="#7be8ff" stop-opacity="0" />
+    <radialGradient id="wash" cx="38%" cy="18%" r="88%">
+      <stop offset="0%" stop-color="#93f1ff" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#93f1ff" stop-opacity="0" />
     </radialGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#7be8ff" />
-      <stop offset="50%" stop-color="#70ffe7" />
-      <stop offset="100%" stop-color="#86ff9e" />
+      <stop offset="0%" stop-color="#81eaff" />
+      <stop offset="45%" stop-color="#72ffd9" />
+      <stop offset="100%" stop-color="#8fff97" />
     </linearGradient>
-    <linearGradient id="prCard" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a355a" />
-      <stop offset="100%" stop-color="#102844" />
+    <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c3b60" />
+      <stop offset="100%" stop-color="#112d4a" />
     </linearGradient>
-    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+    <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
       <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#051022" flood-opacity="0.55" />
+    </filter>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9" />
     </filter>
   </defs>
 
   <rect width="1200" height="320" fill="url(#bg)" />
-  <rect width="1200" height="320" fill="url(#glow)" />
+  <rect width="1200" height="320" fill="url(#wash)" />
 
-  <g opacity="0.28" stroke="url(#accent)" stroke-width="1.6" fill="none">
-    <path d="M22 66h205l40 34h128" />
-    <path d="M14 92h228l34 28h170" />
-    <path d="M36 252h210l24-22h146" />
-    <path d="M784 286h168l20-18h204" />
+  <g opacity="0.2" stroke="url(#accent)" stroke-width="1.6" fill="none">
+    <path d="M-10 72h250l34 25h176" />
+    <path d="M4 247h228l26-19h161" />
+    <path d="M760 44h170l18 16h252" />
+    <path d="M740 281h190l16-14h240" />
   </g>
 
-  <g transform="translate(66 70)" filter="url(#softShadow)">
-    <rect x="0" y="0" rx="18" ry="18" width="210" height="172" fill="#0c213a" fill-opacity="0.82" stroke="#6be8ff" stroke-opacity="0.45" />
-    <circle cx="58" cy="58" r="28" fill="#123a62" stroke="#72e8ff" />
-    <path d="M42 58h32M58 42v32" stroke="#99fff1" stroke-width="4" stroke-linecap="round" />
-    <path d="M105 56h74M105 78h58" stroke="#8eeeff" stroke-width="6" stroke-linecap="round" opacity="0.88" />
-    <circle cx="40" cy="122" r="7" fill="#71ffd5" />
-    <circle cx="86" cy="122" r="7" fill="#7ce6ff" />
-    <circle cx="132" cy="122" r="7" fill="#8fffad" />
-    <path d="M40 122h92" stroke="#86ffd8" stroke-width="2" opacity="0.55" />
-    <text x="20" y="152" fill="#dff6ff" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="15" font-weight="600">PI CODING AGENT</text>
+  <g transform="translate(148 92)" filter="url(#softShadow)">
+    <circle cx="86" cy="70" r="64" fill="#0f2f4f" stroke="#74e9ff" stroke-opacity="0.55" stroke-width="3" />
+    <circle cx="86" cy="70" r="36" fill="#14456c" />
+    <circle cx="86" cy="70" r="16" fill="#8efce3" />
+    <path d="M86 6v24M86 110v24M22 70h24M126 70h24" stroke="#8fefff" stroke-width="3" stroke-linecap="round" opacity="0.9" />
+    <path d="M41 25l17 17M114 98l17 17M41 115l17-17M114 42l17-17" stroke="#79ffd2" stroke-width="2.6" stroke-linecap="round" opacity="0.75" />
+    <circle cx="86" cy="70" r="84" fill="none" stroke="#76e8ff" stroke-opacity="0.3" stroke-dasharray="3 10" />
   </g>
 
-  <g transform="translate(326 122)">
-    <text x="0" y="0" fill="#f1f8ff" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="74" font-weight="800" letter-spacing="1.2">pi-jj</text>
-    <text x="0" y="42" fill="#b8dcff" font-family="'Segoe UI', 'Noto Sans', sans-serif" font-size="26" font-weight="600">Checkpoints + Stacked PRs for Pi Workflows</text>
-    <rect x="0" y="62" width="560" height="4" rx="2" fill="url(#accent)" opacity="0.9" />
+  <g transform="translate(364 26)" opacity="0.25" filter="url(#blur)">
+    <ellipse cx="262" cy="130" rx="210" ry="86" fill="#83f0ff" />
   </g>
 
-  <g transform="translate(836 60)" filter="url(#softShadow)">
-    <rect x="6" y="14" width="278" height="80" rx="14" fill="url(#prCard)" stroke="#6de6ff" stroke-opacity="0.35" />
-    <rect x="22" y="8" width="278" height="80" rx="14" fill="url(#prCard)" stroke="#6de6ff" stroke-opacity="0.35" />
-    <rect x="38" y="0" width="278" height="80" rx="14" fill="url(#prCard)" stroke="#7cf9c8" stroke-opacity="0.55" />
-    <text x="60" y="32" fill="#d8f8ff" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="14" font-weight="700">STACKED PRS</text>
-    <text x="60" y="56" fill="#8deed5" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="13">base: push-change-prev</text>
-    <circle cx="272" cy="40" r="12" fill="#0e3f59" stroke="#8ef4c6" />
-    <path d="M266 40l4 4 8-9" stroke="#8ef4c6" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <g transform="translate(350 112)">
+    <path d="M0 38h74l34-22h58l26-16h66l24 20h60" fill="none" stroke="url(#accent)" stroke-width="4" stroke-linecap="round" />
+    <circle cx="0" cy="38" r="8" fill="#74ffe4" />
+    <circle cx="108" cy="16" r="8" fill="#7de9ff" />
+    <circle cx="192" cy="0" r="8" fill="#8dffbc" />
+    <circle cx="282" cy="20" r="8" fill="#7fefff" />
+    <circle cx="342" cy="20" r="8" fill="#89ffa9" />
+    <path d="M108 16v62M192 0v78M282 20v58" stroke="#9fdfff" stroke-opacity="0.33" stroke-width="2" stroke-dasharray="3 8" />
   </g>
 
-  <g transform="translate(850 180)">
-    <path d="M0 30h22l18-14h34l16-12h40" fill="none" stroke="#7ce8ff" stroke-width="3" />
-    <circle cx="0" cy="30" r="7" fill="#70ffe5" />
-    <circle cx="40" cy="16" r="7" fill="#7ce8ff" />
-    <circle cx="90" cy="4" r="7" fill="#89ffb5" />
-    <text x="0" y="60" fill="#c7e8ff" font-family="'Segoe UI', 'Noto Sans', sans-serif" font-size="17" font-weight="600">Checkpoint trail across every agent turn</text>
+  <g transform="translate(822 70)" filter="url(#softShadow)">
+    <rect x="8" y="18" width="260" height="158" rx="18" fill="url(#plate)">
+      <animate attributeName="opacity" values="0.9;0.82;0.9" dur="5s" repeatCount="indefinite" />
+    </rect>
+    <rect x="20" y="8" width="260" height="158" rx="18" fill="url(#plate)" stroke="#70e7ff" stroke-opacity="0.35" />
+    <rect x="32" y="0" width="260" height="158" rx="18" fill="url(#plate)" stroke="#84ffc0" stroke-opacity="0.6" />
+    <path d="M64 44h104M64 72h144M64 100h118" stroke="#9de8ff" stroke-width="6" stroke-linecap="round" opacity="0.75" />
+    <circle cx="248" cy="44" r="10" fill="#0f4768" stroke="#8df5cc" />
+    <circle cx="248" cy="72" r="10" fill="#0f4768" stroke="#8df5cc" />
+    <circle cx="248" cy="100" r="10" fill="#0f4768" stroke="#8df5cc" />
+  </g>
+
+  <g transform="translate(420 256)">
+    <text x="0" y="0" fill="#e9f7ff" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="48" font-weight="800" letter-spacing="1.2">pi-jj</text>
   </g>
 </svg>
