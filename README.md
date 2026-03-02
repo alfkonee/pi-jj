@@ -1,5 +1,7 @@
 # pi-jj
 
+![pi-jj banner](./assets/pi-jj-banner.svg)
+
 Pi extension package for **Jujutsu-first** workflows.
 
 ## Features
@@ -8,6 +10,47 @@ Pi extension package for **Jujutsu-first** workflows.
 - **Stacked PRs**: inspect, plan, publish, and sync stacked PRs via GitHub
 - **Onboarding**: guided jj init with user/email config and restore mode selection
 - **Agent integration**: LLM-callable tool + packaged skill for safe stacked-PR workflows
+
+## Install
+
+### From npm (recommended)
+
+```bash
+pi install npm:pi-jj
+```
+
+This installs the package and loads its bundled extension + skills automatically.
+
+If you prefer editing settings manually, add this to `~/.pi/agent/settings.json`:
+
+```json
+{
+  "packages": [
+    "npm:pi-jj"
+  ]
+}
+```
+
+Then restart Pi or run `/reload`.
+
+### Local development / path install
+
+```json
+{
+  "packages": [
+    "/absolute/path/to/pi-jj"
+  ]
+}
+```
+
+Advanced/manual (extension path only):
+
+```json
+{
+  "extensions": ["/absolute/path/to/pi-jj/index.ts"],
+  "skills": ["/absolute/path/to/pi-jj/skills"]
+}
+```
 
 ## How it works
 
@@ -171,43 +214,3 @@ Add optional settings under `piJj` in `~/.pi/agent/settings.json`:
 - `autoSyncOnPublish` (default `true`): refresh PR state from GitHub before publish/dry-run and after real publish.
 - `restoreMode` (default `"file"`): checkpoint restore strategy. `"file"` uses `jj restore --from` (file contents only). `"operation"` uses `jj op restore` (full repo state, with auto `jj git fetch` to resync).
 
-## Install
-
-### From npm (recommended)
-
-```bash
-pi install npm:pi-jj
-```
-
-This installs the package and loads its bundled extension + skills automatically.
-
-If you prefer editing settings manually, add this to `~/.pi/agent/settings.json`:
-
-```json
-{
-  "packages": [
-    "npm:pi-jj"
-  ]
-}
-```
-
-Then restart Pi or run `/reload`.
-
-### Local development / path install
-
-```json
-{
-  "packages": [
-    "/absolute/path/to/pi-jj"
-  ]
-}
-```
-
-Advanced/manual (extension path only):
-
-```json
-{
-  "extensions": ["/absolute/path/to/pi-jj/index.ts"],
-  "skills": ["/absolute/path/to/pi-jj/skills"]
-}
-```
