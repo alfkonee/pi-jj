@@ -143,7 +143,7 @@ The flow is accessible to the LLM via two mechanisms:
 | `/jj-pr-publish [--dry-run] [--draft] [--remote]` | Publish/update stacked PRs |
 | `/jj-pr-sync [--remote]` | Sync PR state from GitHub + retarget merged bases |
 | `/jj-stack-close [--remote] [--dry-run] [--keep-bookmarks] [--no-new-change] [--force]` | Close completed stack and optionally clean push bookmarks |
-| `/jj-settings [reload]` | Show or reload extension settings |
+| `/jj-settings [tui\|plain\|reload]` | Open settings TUI (default), or show plain/reload settings |
 
 ## Configuration
 
@@ -173,7 +173,27 @@ Add optional settings under `piJj` in `~/.pi/agent/settings.json`:
 
 ## Install
 
-Recommended (loads extension + packaged skills):
+### From npm (recommended)
+
+```bash
+pi install npm:pi-jj
+```
+
+This installs the package and loads its bundled extension + skills automatically.
+
+If you prefer editing settings manually, add this to `~/.pi/agent/settings.json`:
+
+```json
+{
+  "packages": [
+    "npm:pi-jj"
+  ]
+}
+```
+
+Then restart Pi or run `/reload`.
+
+### Local development / path install
 
 ```json
 {
@@ -182,8 +202,6 @@ Recommended (loads extension + packaged skills):
   ]
 }
 ```
-
-Then restart Pi or run `/reload`.
 
 Advanced/manual (extension path only):
 

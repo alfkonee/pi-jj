@@ -3,7 +3,16 @@ import { rm } from "node:fs/promises";
 import { join } from "node:path";
 import { checkpointLine, formatAge } from "./format";
 import { createSettingsStore } from "./settings";
-import { CHECKPOINT_ENTRY_TYPE, PR_STATE_ENTRY_TYPE, STATUS_KEY, type Checkpoint, type PendingCheckpoint } from "./types";
+import {
+  CHECKPOINT_ENTRY_TYPE,
+  DEFAULT_CHECKPOINT_LIST_LIMIT,
+  DEFAULT_MAX_CHECKPOINTS,
+  PR_STATE_ENTRY_TYPE,
+  STATUS_KEY,
+  type Checkpoint,
+  type PendingCheckpoint,
+  type PiJjSettings,
+} from "./types";
 
 type TurnEventLike = { turnIndex: number; timestamp: number };
 type TurnEndEventLike = { turnIndex: number };
@@ -2226,6 +2235,202 @@ export class PiJjRuntime {
     return defaultBase;
   }
 
+  private settingsSummary(settings: PiJjSettings): string {
+    return (
+      `piJj settings\n` +
+      `silentCheckpoints: ${settings.silentCheckpoints}\n` +
+      `maxCheckpoints: ${settings.maxCheckpoints}\n` +
+      `checkpointListLimit: ${settings.checkpointListLimit}\n` +
+      `promptForInit: ${settings.promptForInit}\n` +
+      `promptForPublishMode: ${settings.promptForPublishMode}\n` +
+      `autoSyncOnPublish: ${settings.autoSyncOnPublish}\n` +
+      `restoreMode: ${settings.restoreMode}\n` +
+      `file: ${this.settingsStore.settingsFile}`
+    );
+  }
+
+  private applySetting<K extends keyof PiJjSettings>(key: K, value: PiJjSettings[K], ctx: ExtensionContext) {
+    this.settingsStore.updateSetting(key, value);
+    const updated = this.loadSettings();
+
+    if (!this.isJjRepo) {
+      this.needsInitPrompt = updated.promptForInit && this.isGitRepo;
+    }
+
+    this.setStatus(ctx);
+  }
+
+  private clampSetting(value: number, min: number, max: number): number {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  private async adjustNumericSetting(
+    key: "maxCheckpoints" | "checkpointListLimit",
+    label: string,
+    min: number,
+    max: number,
+    defaultValue: number,
+    smallStep: number,
+    largeStep: number,
+    ctx: ExtensionContext,
+  ) {
+    const current = this.loadSettings()[key];
+    const increaseSmall = this.clampSetting(current + smallStep, min, max);
+    const decreaseSmall = this.clampSetting(current - smallStep, min, max);
+    const increaseLarge = this.clampSetting(current + largeStep, min, max);
+    const decreaseLarge = this.clampSetting(current - largeStep, min, max);
+
+    const increaseSmallOption = `Increase by ${smallStep} → ${increaseSmall}`;
+    const decreaseSmallOption = `Decrease by ${smallStep} → ${decreaseSmall}`;
+    const increaseLargeOption = `Increase by ${largeStep} → ${increaseLarge}`;
+    const decreaseLargeOption = `Decrease by ${largeStep} → ${decreaseLarge}`;
+    const setDefaultOption = `Set default (${defaultValue})`;
+    const setMinOption = `Set minimum (${min})`;
+    const setMaxOption = `Set maximum (${max})`;
+    const cancelOption = "Cancel";
+
+    const choice = await ctx.ui.select(`Adjust ${label} (current ${current}, range ${min}..${max})`, [
+      increaseSmallOption,
+      decreaseSmallOption,
+      increaseLargeOption,
+      decreaseLargeOption,
+      setDefaultOption,
+      setMinOption,
+      setMaxOption,
+      cancelOption,
+    ]);
+
+    if (!choice || choice === cancelOption) return;
+
+    let next = current;
+    if (choice === increaseSmallOption) next = increaseSmall;
+    if (choice === decreaseSmallOption) next = decreaseSmall;
+    if (choice === increaseLargeOption) next = increaseLarge;
+    if (choice === decreaseLargeOption) next = decreaseLarge;
+    if (choice === setDefaultOption) next = defaultValue;
+    if (choice === setMinOption) next = min;
+    if (choice === setMaxOption) next = max;
+
+    if (next === current) return;
+
+    this.applySetting(key, next, ctx);
+    ctx.ui.notify(`Updated ${key}: ${current} → ${next}`, "info");
+  }
+
+  private async openSettingsTui(ctx: ExtensionContext) {
+    if (!ctx.hasUI) return;
+
+    while (true) {
+      const settings = this.loadSettings();
+
+      const toggleSilent = `Toggle silentCheckpoints (currently ${settings.silentCheckpoints})`;
+      const adjustMax = `Adjust maxCheckpoints (currently ${settings.maxCheckpoints})`;
+      const adjustList = `Adjust checkpointListLimit (currently ${settings.checkpointListLimit})`;
+      const togglePromptInit = `Toggle promptForInit (currently ${settings.promptForInit})`;
+      const togglePromptPublish = `Toggle promptForPublishMode (currently ${settings.promptForPublishMode})`;
+      const toggleAutoSync = `Toggle autoSyncOnPublish (currently ${settings.autoSyncOnPublish})`;
+      const switchRestore = `Switch restoreMode (currently ${settings.restoreMode})`;
+      const reloadOption = "Reload settings from file";
+      const showSummaryOption = "Show current settings summary";
+      const doneOption = "Done";
+
+      const choice = await ctx.ui.select("pi-jj settings", [
+        toggleSilent,
+        adjustMax,
+        adjustList,
+        togglePromptInit,
+        togglePromptPublish,
+        toggleAutoSync,
+        switchRestore,
+        reloadOption,
+        showSummaryOption,
+        doneOption,
+      ]);
+
+      if (!choice || choice === doneOption) return;
+
+      if (choice === toggleSilent) {
+        this.applySetting("silentCheckpoints", !settings.silentCheckpoints, ctx);
+        ctx.ui.notify(`Updated silentCheckpoints: ${!settings.silentCheckpoints}`, "info");
+        continue;
+      }
+
+      if (choice === adjustMax) {
+        await this.adjustNumericSetting("maxCheckpoints", "maxCheckpoints", 10, 5000, DEFAULT_MAX_CHECKPOINTS, 25, 100, ctx);
+        continue;
+      }
+
+      if (choice === adjustList) {
+        await this.adjustNumericSetting(
+          "checkpointListLimit",
+          "checkpointListLimit",
+          5,
+          200,
+          DEFAULT_CHECKPOINT_LIST_LIMIT,
+          5,
+          25,
+          ctx,
+        );
+        continue;
+      }
+
+      if (choice === togglePromptInit) {
+        this.applySetting("promptForInit", !settings.promptForInit, ctx);
+        ctx.ui.notify(`Updated promptForInit: ${!settings.promptForInit}`, "info");
+        continue;
+      }
+
+      if (choice === togglePromptPublish) {
+        this.applySetting("promptForPublishMode", !settings.promptForPublishMode, ctx);
+        ctx.ui.notify(`Updated promptForPublishMode: ${!settings.promptForPublishMode}`, "info");
+        continue;
+      }
+
+      if (choice === toggleAutoSync) {
+        this.applySetting("autoSyncOnPublish", !settings.autoSyncOnPublish, ctx);
+        ctx.ui.notify(`Updated autoSyncOnPublish: ${!settings.autoSyncOnPublish}`, "info");
+        continue;
+      }
+
+      if (choice === switchRestore) {
+        const modeChoice = await ctx.ui.select("Select restore mode", [
+          "file (restore file contents only via jj restore)",
+          "operation (restore full repo state via jj op restore)",
+          "Cancel",
+        ]);
+
+        if (!modeChoice || modeChoice === "Cancel") continue;
+
+        const next = modeChoice.startsWith("operation") ? "operation" : "file";
+        if (next !== settings.restoreMode) {
+          this.applySetting("restoreMode", next, ctx);
+          ctx.ui.notify(`Updated restoreMode: ${next}`, "info");
+        }
+        continue;
+      }
+
+      if (choice === reloadOption) {
+        this.settingsStore.clearCache();
+        const reloaded = this.loadSettings();
+
+        if (!this.isJjRepo) {
+          this.needsInitPrompt = reloaded.promptForInit && (await this.detectGitRepo());
+        }
+
+        this.setStatus(ctx);
+        ctx.ui.notify(
+          `Reloaded piJj settings: silent=${reloaded.silentCheckpoints}, max=${reloaded.maxCheckpoints}, list=${reloaded.checkpointListLimit}, promptInit=${reloaded.promptForInit}, promptPublishMode=${reloaded.promptForPublishMode}, autoSyncOnPublish=${reloaded.autoSyncOnPublish}, restore=${reloaded.restoreMode}`,
+          "info",
+        );
+        continue;
+      }
+
+      if (choice === showSummaryOption) {
+        ctx.ui.notify(this.settingsSummary(this.loadSettings()), "info");
+      }
+    }
+  }
+
   async commandJjSettings(args: string, ctx: ExtensionContext) {
     const mode = (args ?? "").trim().toLowerCase();
     if (mode === "reload") {
@@ -2244,19 +2449,13 @@ export class PiJjRuntime {
       return;
     }
 
+    if ((mode === "" || mode === "tui" || mode === "edit") && ctx.hasUI) {
+      await this.openSettingsTui(ctx);
+      return;
+    }
+
     const settings = this.loadSettings();
-    ctx.ui.notify(
-      `piJj settings\n` +
-        `silentCheckpoints: ${settings.silentCheckpoints}\n` +
-        `maxCheckpoints: ${settings.maxCheckpoints}\n` +
-        `checkpointListLimit: ${settings.checkpointListLimit}\n` +
-        `promptForInit: ${settings.promptForInit}\n` +
-        `promptForPublishMode: ${settings.promptForPublishMode}\n` +
-        `autoSyncOnPublish: ${settings.autoSyncOnPublish}\n` +
-        `restoreMode: ${settings.restoreMode}\n` +
-        `file: ${this.settingsStore.settingsFile}`,
-      "info",
-    );
+    ctx.ui.notify(this.settingsSummary(settings), "info");
   }
 
   private async initialize(ctx: ExtensionContext) {
