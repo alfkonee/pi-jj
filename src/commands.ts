@@ -60,7 +60,7 @@ export function registerCommands(pi: ExtensionAPI, runtime: PiJjRuntime) {
   });
 
   pi.registerCommand("jj-settings", {
-    description: "Show or reload pi-jj settings (usage: /jj-settings [reload])",
+    description: "Settings UI/show/reload (usage: /jj-settings [tui|plain|reload])",
     handler: async (args, ctx) => {
       await runtime.commandJjSettings(args, ctx);
     },

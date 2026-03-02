@@ -147,7 +147,7 @@ export function registerTools(pi: ExtensionAPI, runtime: PiJjRuntime) {
       } else if (action === "checkpoints") {
         args = buildArgs([extraArgs || "plain"]);
       } else if (action === "settings") {
-        args = buildArgs([extraArgs]);
+        args = buildArgs([extraArgs || "plain"]);
       } else if (action === "settings-reload") {
         args = buildArgs([extraArgs || "reload"]);
       }
