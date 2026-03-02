@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">pi-jj banner</title>
+  <desc id="desc">Dark gradient banner with pi-jj title and Jujutsu-first workflows for Pi subtitle.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020" />
+      <stop offset="55%" stop-color="#111a36" />
+      <stop offset="100%" stop-color="#1a2240" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#69e7ff" />
+      <stop offset="100%" stop-color="#7fffb3" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="320" fill="url(#bg)" />
+  <circle cx="1030" cy="-40" r="250" fill="#5cc8ff" fill-opacity="0.09" />
+  <circle cx="180" cy="340" r="220" fill="#7fffb3" fill-opacity="0.08" />
+
+  <g fill="none" stroke="url(#accent)" stroke-width="2" opacity="0.35">
+    <path d="M90 248h165l36-34h102" />
+    <path d="M90 269h212l26-24h82" />
+    <path d="M810 88h120l24 26h150" />
+  </g>
+
+  <text x="90" y="140" fill="#ecf4ff" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="78" font-weight="700" letter-spacing="1.2">pi-jj</text>
+  <text x="90" y="196" fill="#b9cae8" font-family="'Inter', 'Segoe UI', sans-serif" font-size="30" font-weight="500">Jujutsu-first workflows for Pi</text>
+</svg>
