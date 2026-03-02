@@ -1,6 +1,6 @@
 # pi-jj
 
-![pi-jj banner](./assets/pi-jj-banner-v2.png)
+![pi-jj banner](./assets/banner-concept-no-text.svg)
 
 Pi extension package for **Jujutsu-first** workflows.
 
