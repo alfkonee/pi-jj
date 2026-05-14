@@ -6,10 +6,6 @@ export function registerEvents(pi: ExtensionAPI, runtime: PiJjRuntime) {
     await runtime.handleSessionStart(ctx);
   });
 
-  pi.on("session_switch", async (_event, ctx) => {
-    await runtime.handleSessionSwitch(ctx);
-  });
-
   pi.on("before_agent_start", async (_event, ctx) => {
     await runtime.handleBeforeAgentStart(ctx);
   });

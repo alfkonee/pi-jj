@@ -1399,10 +1399,6 @@ export class PiJjRuntime {
     await this.initialize(ctx);
   }
 
-  async handleSessionSwitch(ctx: ExtensionContext) {
-    await this.initialize(ctx);
-  }
-
   async handleBeforeAgentStart(ctx: ExtensionContext) {
     if (!ctx.hasUI) return;
     if (this.isJjRepo) return;
